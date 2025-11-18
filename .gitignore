@@ -1,0 +1,15 @@
+# Node
+node_modules/
+
+# Env secrets
+.env
+
+# Firebase service account key (NO subir)
+firebase/serviceAccountKey.json
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminar Cuenta - WatchMe</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .step {
+            display: none;
+        }
+
+        .step.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #6ee7b7;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        .alert-warning {
+            background: #fef3c7;
+            color: #92400e;
+            border: 1px solid #fcd34d;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .info-box {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #1e40af;
+        }
+
+        .warning-box {
+            background: #fef2f2;
+            border: 2px solid #fecaca;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .warning-box h3 {
+            color: #991b1b;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .warning-box p {
+            color: #7f1d1d;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🗑️ Eliminar Cuenta</h1>
+        <p class="subtitle">Proceso seguro de eliminación de cuenta</p>
+
+        <div id="message"></div>
+
+        <!-- Paso 1: Ingresar Email -->
+        <div id="step1" class="step active">
+            <div class="form-group">
+                <label for="email">Correo Electrónico</label>
+                <input type="email" id="email" placeholder="tu@correo.com" required>
+            </div>
+            <button class="btn btn-primary" onclick="solicitarCodigo(false)">
+                Enviar Código de Verificación
+            </button>
+        </div>
+
+        <!-- Paso 2: Verificar Código -->
+        <div id="step2" class="step">
+            <div class="info-box">
+                📧 Hemos enviado un código de 6 dígitos a tu correo. Válido por 30 minutos.
+            </div>
+            <div class="form-group">
+                <label for="codigo">Código de Verificación</label>
+                <input type="text" id="codigo" placeholder="123456" maxlength="6" pattern="[0-9]{6}" required>
+            </div>
+            <button class="btn btn-primary" onclick="verificarCodigo()">
+                Verificar Código
+            </button>
+        </div>
+
+        <!-- Paso 3: Confirmación Final -->
+        <div id="step3" class="step">
+            <div class="warning-box">
+                <h3>⚠️ Advertencia Final</h3>
+                <p>Esta acción es <strong>irreversible</strong>. Se eliminará:</p>
+                <ul style="margin-top: 10px; padding-left: 20px; color: #7f1d1d;">
+                    <li>Tu cuenta de usuario</li>
+                    <li>Todos tus favoritos</li>
+                    <li>Historial de visualización</li>
+                    <li>Todos tus datos personales</li>
+                </ul>
+            </div>
+            <button class="btn btn-danger" onclick="eliminarCuenta()">
+                Confirmar Eliminación
+            </button>
+        </div>
+
+        <!-- Paso 4: Completado -->
+        <div id="step4" class="step">
+            <div class="alert alert-success">
+                ✅ Tu cuenta ha sido eliminada exitosamente. Lamentamos verte partir.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_KEY = '<%= apiKey %>';
+        const API_URL = '<%= apiUrl %>';
+        let currentEmail = '';
+        let tokenEliminacion = '';
+
+        function mostrarMensaje(mensaje, tipo) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.innerHTML = `<div class="alert alert-${tipo}">${mensaje}</div>`;
+            setTimeout(() => {
+                messageDiv.innerHTML = '';
+            }, 5000);
+        }
+
+        function cambiarPaso(paso) {
+            document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+            document.getElementById(`step${paso}`).classList.add('active');
+        }
+
+        async function solicitarCodigo(forzar = false) {
+            const email = document.getElementById('email').value;
+            
+            if (!email) {
+                mostrarMensaje('Por favor ingresa tu correo electrónico', 'error');
+                return;
+            }
+
+            const btn = event.target;
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span>Enviando...';
+
+            try {
+                const response = await fetch(`${API_URL}/solicitar-codigo`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-API-Key': API_KEY
+                    },
+                    body: JSON.stringify({ 
+                        email: email,
+                        forzarReenvio: forzar
+                    })
+                });
+
+                const data = await response.json();
+                console.log('Respuesta del servidor:', data);
+
+                // Si la respuesta es exitosa O si ya existe un código válido, pasar al paso 2
+                if (data.success || (data.message && data.message.includes('código válido'))) {
+                    currentEmail = email;
+                    
+                    // Determinar el mensaje apropiado
+                    if (data.data && data.data.puedeVerificar) {
+                        mostrarMensaje(`✅ Ya tienes un código activo (válido por ${data.data.tiempoRestanteMinutos} minutos). Ingrésalo a continuación.`, 'warning');
+                    } else if (data.message && data.message.includes('código válido')) {
+                        const minutos = data.tiempoRestante ? Math.ceil(data.tiempoRestante / 60) : '?';
+                        mostrarMensaje(`✅ Ya tienes un código activo (válido por ${minutos} minutos). Ingrésalo a continuación.`, 'warning');
+                    } else {
+                        mostrarMensaje('✅ Código enviado a tu correo', 'success');
+                    }
+                    
+                    console.log('Cambiando a paso 2...');
+                    cambiarPaso(2);
+                } else {
+                    console.error('Error en respuesta:', data);
+                    mostrarMensaje(data.message || 'Error al enviar código', 'error');
+                }
+            } catch (error) {
+                console.error('Error de red:', error);
+                mostrarMensaje('Error al enviar código. Intenta de nuevo.', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'Enviar Código de Verificación';
+            }
+        }
+
+        async function verificarCodigo() {
+            const codigo = document.getElementById('codigo').value;
+            
+            if (!codigo || codigo.length !== 6) {
+                mostrarMensaje('Por favor ingresa el código de 6 dígitos', 'error');
+                return;
+            }
+
+            const btn = event.target;
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span>Verificando...';
+
+            try {
+                const response = await fetch(`${API_URL}/verificar-codigo`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-API-Key': API_KEY
+                    },
+                    body: JSON.stringify({ 
+                        email: currentEmail, 
+                        codigo: codigo 
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    tokenEliminacion = data.data.tokenEliminacion;
+                    mostrarMensaje('✅ Código verificado correctamente', 'success');
+                    cambiarPaso(3);
+                } else {
+                    mostrarMensaje(data.message, 'error');
+                }
+            } catch (error) {
+                mostrarMensaje('Error al verificar código. Intenta de nuevo.', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'Verificar Código';
+            }
+        }
+
+        async function eliminarCuenta() {
+            if (!confirm('¿Estás completamente seguro? Esta acción NO se puede deshacer.')) {
+                return;
+            }
+
+            const btn = event.target;
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span>Eliminando...';
+
+            try {
+                const response = await fetch(`${API_URL}/eliminar-con-codigo`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-API-Key': API_KEY
+                    },
+                    body: JSON.stringify({ 
+                        email: currentEmail, 
+                        tokenEliminacion: tokenEliminacion 
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    cambiarPaso(4);
+                } else {
+                    mostrarMensaje(data.message, 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = 'Confirmar Eliminación';
+                }
+            } catch (error) {
+                mostrarMensaje('Error al eliminar cuenta. Intenta de nuevo.', 'error');
+                btn.disabled = false;
+                btn.innerHTML = 'Confirmar Eliminación';
+            }
+        }
+    </script>
+</body>
+</html>

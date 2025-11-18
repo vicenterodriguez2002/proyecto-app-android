@@ -1,0 +1,5 @@
+PassengerBaseURI /
+PassengerAppRoot /home/virocacl/public_html/watchme.viroca.cl
+PassengerAppType node
+PassengerStartupFile index.js
+PassengerNodejs /home/virocacl/nodevenv/public_html/watchme.viroca.cl/20/bin/node
