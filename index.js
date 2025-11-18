@@ -23,6 +23,20 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Ruta raíz
+app.get('/', (req, res) => {
+  res.json({
+    message: "WatchMe - API de Eliminación de Cuenta",
+    version: "1.0.0",
+    endpoints: {
+      web: "/eliminar-cuenta",
+      api: "/api/usuarios",
+      android: "/api/usuarios/android/eliminar"
+    },
+    documentation: "https://github.com/vicenterodriguez2002/proyecto-app-android"
+  });
+});
+
 // Ruta para servir la vista de eliminación (sin API Key)
 app.get('/eliminar-cuenta', (req, res) => {
   const baseUrl = process.env.NODE_ENV === 'production' 
