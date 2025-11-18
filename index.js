@@ -39,9 +39,11 @@ app.get('/', (req, res) => {
 
 // Ruta para servir la vista de eliminación (sin API Key)
 app.get('/eliminar-cuenta', (req, res) => {
-  const baseUrl = process.env.NODE_ENV === 'production' 
-    ? 'https://watchme.viroca.cl' 
-    : `http://localhost:${PORT}`;
+  const baseUrl = process.env.VERCEL_URL 
+    ? `https://${process.env.VERCEL_URL}` 
+    : (process.env.NODE_ENV === 'production' 
+      ? 'https://proyecto-app-android.vercel.app' 
+      : `http://localhost:${PORT}`);
   
   res.render('eliminar', {
     apiKey: process.env.API_KEY,
